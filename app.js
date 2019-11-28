@@ -30,7 +30,7 @@ setInterval(() => {
     console.log(topStatusCode);
   //If fail, update with random number
     console.log('End of loop');
-}, 500);
+}, 3000);
 
 async function order() {
     const promise = axios.post('http://localhost:3000/purchase/' + randomItem + '/' + randomQuantity, {});
