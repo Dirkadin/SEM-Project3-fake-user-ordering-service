@@ -1,21 +1,8 @@
 var createError = require('http-errors');
 var express = require('express');
-var path = require('path');
-var cookieParser = require('cookie-parser');
-var logger = require('morgan');
 const axios = require('axios');
 
 var app = express();
-
-// view engine setup
-// app.set('views', path.join(__dirname, 'views'));
-// app.set('view engine', 'pug');
-//
-// app.use(logger('dev'));
-// app.use(express.json());
-// app.use(express.urlencoded({ extended: false }));
-// app.use(cookieParser());
-// app.use(express.static(path.join(__dirname, 'public')));
 
 const itemsArray = [
     'hotdog',
@@ -24,40 +11,54 @@ const itemsArray = [
     'cookie'
 ];
 
+var randomQuantity = getRandomInt(10);
+var randomItem = itemsArray[getRandomInt(3)];
+var topStatusCode;
+
 let i = 0;
 setInterval(() => {
   console.log('Infinite Loop Test interval n:', i++);
-  var randomQuantity = getRandomInt(10);
-  //Rand item
 
-  var randomItem = itemsArray[getRandomInt(3)];
+  randomQuantity = getRandomInt(10);
+  randomItem = itemsArray[getRandomInt(3)];
+
+  console.log('Random Quantity: ' + randomQuantity);
+  console.log('Random Item: ' + randomItem);
+
   //Try order port3000
-    axios.post('http://localhost:3000/purchase/' + randomItem + randomQuantity, {
-    })
-        .then(function (response) {
-            if (response.body.statusCode === 202) {
-                console.log("You ordered " + randomQuantity + " " + randomItem);
-            } else {
-
-            }
-            console.log(response);
-        })
-        .catch(function (error) {
-            console.log(error);
-        });
-
+    const orderStatus = order2();
+    console.log(topStatusCode);
   //If fail, update with random number
-
-}, 2000);
-
-function getRandomInt(max) {
-  return Math.floor(Math.random() * Math.floor(max));
-}
+    console.log('End of loop');
+}, 500);
 
 async function order() {
-    const promise = axios.post('http://localhost:3000/purchase/' + randomItem + randomQuantity, {});
+    const promise = axios.post('http://localhost:3000/purchase/' + randomItem + '/' + randomQuantity, {});
     const response = await promise;
-    return response.body.statusCode;
+    console.log('Logging response: ' + response);
+    topStatusCode = response.body.statusCode;
+}
+
+async function order2() {
+    const statusCode = axios.post('http://localhost:3000/purchase/' + randomItem + '/' + randomQuantity)
+        .then((response) => {
+            return response.data.statusCode;
+        })
+        .catch(function (error) {
+            update().then(() => console.log('Updated ' + randomItem));
+        });
+    return await statusCode;
+}
+
+async function update() {
+    const promise = axios.post('http://localhost:5002/setcount/' + randomItem + '/' + getRandomInt())
+        .catch(function (error) {
+            console.log('Error in update: ' + error.message);
+        });
+}
+
+function getRandomInt(max) {
+    return Math.floor(Math.random() * Math.floor(max));
 }
 
 // catch 404 and forward to error handler
