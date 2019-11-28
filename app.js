@@ -13,7 +13,6 @@ const itemsArray = [
 
 var randomQuantity = getRandomInt(10);
 var randomItem = itemsArray[getRandomInt(3)];
-var topStatusCode;
 
 let i = 0;
 setInterval(() => {
@@ -22,22 +21,10 @@ setInterval(() => {
   randomQuantity = getRandomInt(10);
   randomItem = itemsArray[getRandomInt(3)];
 
-  console.log('Random Quantity: ' + randomQuantity);
-  console.log('Random Item: ' + randomItem);
-
-  //Try order port3000
-    const orderStatus = order2();
-    console.log(topStatusCode);
+  order2();
   //If fail, update with random number
-    console.log('End of loop');
+  console.log('End of loop');
 }, 3000);
-
-async function order() {
-    const promise = axios.post('http://localhost:3000/purchase/' + randomItem + '/' + randomQuantity, {});
-    const response = await promise;
-    console.log('Logging response: ' + response);
-    topStatusCode = response.body.statusCode;
-}
 
 async function order2() {
     const statusCode = axios.post('http://localhost:3000/purchase/' + randomItem + '/' + randomQuantity)
