@@ -21,6 +21,9 @@ setInterval(() => {
   randomQuantity = getRandomInt(10);
   randomItem = itemsArray[getRandomInt(3)];
 
+  console.log("randomQuantity: " + randomQuantity);
+  console.log("randomItem: " + randomItem);
+
   order2();
   //If fail, update with random number
   console.log('End of loop');
