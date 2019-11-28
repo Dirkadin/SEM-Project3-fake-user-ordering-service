@@ -27,7 +27,7 @@ setInterval(() => {
 }, 3000);
 
 async function order2() {
-    const statusCode = axios.post('http://localhost:3000/purchase/' + randomItem + '/' + randomQuantity)
+    const statusCode = axios.post('ordering-service://ordering-service:3000/purchase/' + randomItem + '/' + randomQuantity)
         .then((response) => {
             return response.data.statusCode;
         })
@@ -38,7 +38,7 @@ async function order2() {
 }
 
 async function update() {
-    const promise = axios.post('http://localhost:5002/setcount/' + randomItem + '/' + getRandomInt())
+    const promise = axios.post('fake-inventory-service://fake-inventory-service:5002/setcount/' + randomItem + '/' + getRandomInt())
         .catch(function (error) {
             console.log('Error in update: ' + error.message);
         });
